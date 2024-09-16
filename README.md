@@ -1,9 +1,9 @@
 # Pokedexcli
 
-A GO application, to interact with the Pokemon API at `https://pokeapi.co/` from your CLI.
+A Go application, to interact with the Pokemon API at `https://pokeapi.co/` from your CLI.
 
 ## How to use it.
-If you have GO installed you can download the code and use `go run .` or build it with `go build .` and then just run the file `./pokedexcli`
+If you have Go installed you can download the code and use `go run .` or build it with `go build .` and then just run the file `./pokedexcli`
 
 ### Available commands
 * help -> will display the available commands
