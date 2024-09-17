@@ -2,6 +2,9 @@ package pokeapi
 
 import (
 	"errors"
+	"time"
+
+	"github.com/jimsam/pokedexcli/pokecache"
 )
 
 const baseURL = "https://pokeapi.co/api/v2/"
@@ -11,19 +14,26 @@ var resources = map[string]string{
 }
 
 type FetchData interface {
-	GetResource(resource string) (interface{}, error)
+	GetResource(resource string, cache *pokecache.Cache) (interface{}, error)
 }
 
-func ProcessRequest(r FetchData, resource string, lastResponse any) (interface{}, error) {
-	resourceURL, err := getProperUrl(resource, lastResponse)
+var cache *pokecache.Cache
+
+func init() {
+	cache = pokecache.NewCache(time.Minute * 5)
+}
+
+func ProcessRequest(r FetchData, resource string, lastResponse *any) error {
+	resourceURL, err := getProperUrl(resource, *lastResponse)
 	if err != nil {
-		return r, err
+		return err
 	}
-	res, err := r.GetResource(resourceURL)
+
+	*lastResponse, err = r.GetResource(resourceURL, cache)
 	if err != nil {
-		return r, err
+		return err
 	}
-	return res, nil
+	return nil
 }
 
 func getProperUrl(resource string, lastResponse any) (string, error) {
