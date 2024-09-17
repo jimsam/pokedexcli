@@ -1,46 +1,49 @@
 package pokecache
 
 import (
+	"net/url"
 	"sync"
 	"time"
 )
 
 type Cache struct {
-	data map[string]CacheEntry
-	mu   *sync.RWMutex
+	Data map[string]CacheEntry
+	Mu   *sync.RWMutex
 }
 
 type CacheEntry struct {
-	createdAt time.Time
-	val       []byte
+	CreatedAt time.Time
+	Val       []byte
 }
 
-func NewCache(interval time.Duration) Cache {
+func NewCache(interval time.Duration) *Cache {
 	c := Cache{
-		data: make(map[string]CacheEntry),
-		mu:   &sync.RWMutex{},
+		Data: make(map[string]CacheEntry),
+		Mu:   &sync.RWMutex{},
 	}
 	go c.checkLoop(interval)
-	return c
+	return &c
 }
 
 func (c Cache) Add(key string, val []byte) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	_, found := c.data[key]
+	c.Mu.Lock()
+	defer c.Mu.Unlock()
+	_, found := c.Data[key]
 	if !found {
-		c.data[key] = CacheEntry{
-			createdAt: time.Now().UTC(),
-			val:       val,
+		c.Data[key] = CacheEntry{
+			CreatedAt: time.Now().UTC(),
+			Val:       val,
 		}
 	}
 }
 
+// TODO: change the key to url.URL in order to check all the params and the path and host (no matter the order of params)
 func (c Cache) Get(key string) ([]byte, bool) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	val, found := c.data[key]
-	return val.val, found
+	c.Mu.Lock()
+	defer c.Mu.Unlock()
+	// query := key.Query()
+	val, found := c.Data[key]
+	return val.Val, found
 }
 
 func (c Cache) checkLoop(interval time.Duration) {
@@ -51,11 +54,11 @@ func (c Cache) checkLoop(interval time.Duration) {
 }
 
 func (c Cache) check(now time.Time, last time.Duration) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	for k, v := range c.data {
-		if v.createdAt.Before(now.Add(-last)) {
-			delete(c.data, k)
+	c.Mu.Lock()
+	defer c.Mu.Unlock()
+	for k, v := range c.Data {
+		if v.CreatedAt.Before(now.Add(-last)) {
+			delete(c.Data, k)
 		}
 	}
 }
