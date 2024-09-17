@@ -15,13 +15,15 @@ func main() {
 		input := scanner.Text()
 		val, found := getCommands()[input]
 		if found {
-			lastResponse, err = val.callback(lastResponse)
+			err = val.callback(&lastResponse)
 			if err != nil && err.Error() == "exit" {
 				fmt.Println(err)
 				break
 			} else if err != nil {
 				fmt.Println(err)
 			}
+		} else {
+			fmt.Println("This command was not found!")
 		}
 		fmt.Printf("pokedex > ")
 	}
