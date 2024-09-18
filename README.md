@@ -12,5 +12,4 @@ If you have Go installed you can download the code and use `go run .` or build i
 * exit -> exits
 
 ### Next steps
-* Add caching so no calls to API will occur if the information is already fetched
-* Caching will invalidate after 5 minutes.
+* add more resources from the API
