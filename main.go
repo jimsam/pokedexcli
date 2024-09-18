@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -12,10 +13,13 @@ func main() {
 	var lastResponse any
 	var err error
 	for scanner.Scan() {
-		input := scanner.Text()
-		val, found := getCommands()[input]
+		input := strings.Split(scanner.Text(), " ")
+		if len(input) == 0 {
+			fmt.Println("You must enter a command!")
+		}
+		val, found := getCommands()[input[0]]
 		if found {
-			err = val.callback(&lastResponse)
+			err = val.callback(&lastResponse, input)
 			if err != nil && err.Error() == "exit" {
 				fmt.Println(err)
 				break
