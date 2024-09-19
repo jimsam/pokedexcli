@@ -68,6 +68,10 @@ func (r LocationAreaResponse) GetResource(resourceURL string, cache *pokecache.C
 		fmt.Println("Fetching from web...")
 		data, err = fetchFromWeb(resourceURL, cache)
 	}
+	if err != nil {
+		return nil, err
+	}
+
 	err = json.Unmarshal(data, &r)
 	if err != nil {
 		return r, err
@@ -78,5 +82,7 @@ func (r LocationAreaResponse) GetResource(resourceURL string, cache *pokecache.C
 }
 
 func printLocationArea(r LocationAreaResponse) {
-	fmt.Println(r.Name)
+	for _, val := range r.PokemonEncounters {
+		fmt.Println("- ", val.Pokemon.Name)
+	}
 }

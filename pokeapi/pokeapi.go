@@ -33,7 +33,6 @@ func ProcessRequest(r FetchData, resource string, lastResponse *any, args []stri
 		return err
 	}
 
-	fmt.Println(resourceURL)
 	*lastResponse, err = r.GetResource(resourceURL, cache)
 	if err != nil {
 		return err
@@ -84,17 +83,16 @@ func fetchFromWeb(resourceURL string, cache *pokecache.Cache) ([]byte, error) {
 	if err != nil {
 		return []byte{}, err
 	}
-
-	body, err := io.ReadAll(res.Body)
 	defer res.Body.Close()
-	if err != nil {
-		return []byte{}, err
-	}
 
 	if res.StatusCode >= 200 && res.StatusCode < 300 {
+		body, err := io.ReadAll(res.Body)
+		if err != nil {
+			return []byte{}, err
+		}
 		cache.Add(resourceURL, body)
 		return body, nil
 	} else {
-		return []byte{}, fmt.Errorf("The was a response with %d code with message: %v", res.StatusCode, res.Body)
+		return []byte{}, fmt.Errorf("The was a response with %d code", res.StatusCode)
 	}
 }
