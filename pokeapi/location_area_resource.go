@@ -77,11 +77,11 @@ func (r LocationAreaResponse) GetResource(resourceURL string, cache *pokecache.C
 		return r, err
 	}
 	r.Resource = "location-area"
-	printLocationArea(r)
+	printPokemonInArea(r)
 	return r, nil
 }
 
-func printLocationArea(r LocationAreaResponse) {
+func printPokemonInArea(r LocationAreaResponse) {
 	for _, val := range r.PokemonEncounters {
 		fmt.Println("- ", val.Pokemon.Name)
 	}
