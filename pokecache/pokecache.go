@@ -40,7 +40,6 @@ func (c Cache) Add(key string, val []byte) {
 func (c Cache) Get(key string) ([]byte, bool) {
 	c.Mu.Lock()
 	defer c.Mu.Unlock()
-	// query := key.Query()
 	val, found := c.Data[key]
 	return val.Val, found
 }
