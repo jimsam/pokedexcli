@@ -16,5 +16,4 @@ If you have Go installed you can download the code and use `go run .` or build i
 * pokedex -> Lists all caught pokemons.
 * exit -> exits
 
-### Next steps
-* add more resources from the API
+### WIP
