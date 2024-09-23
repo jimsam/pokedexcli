@@ -61,7 +61,7 @@ type LocationAreaResponse struct {
 	} `json:"pokemon_encounters"`
 }
 
-func (r LocationAreaResponse) GetResource(resourceURL string, cache *pokecache.Cache) (interface{}, error) {
+func (r LocationAreaResponse) GetResource(resourceURL string, cache *pokecache.Cache, action string, pokedex map[string]pokecache.Pokedex, args []string) (interface{}, error) {
 	data, found := cache.Get(resourceURL)
 	var err error
 	if !found {
