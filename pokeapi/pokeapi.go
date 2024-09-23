@@ -14,39 +14,46 @@ const baseURL = "https://pokeapi.co/api/v2/"
 
 var resources = map[string]string{
 	"map":     baseURL + "location",
+	"visit":   baseURL + "location/",
 	"explore": baseURL + "location-area/",
+	"catch":   baseURL + "pokemon/",
+	"inspect": baseURL + "pokemon/",
+	"species": baseURL + "pokemon-species/",
+	"pokedex": "",
 }
 
 type FetchData interface {
-	GetResource(resourceURL string, cache *pokecache.Cache) (interface{}, error)
+	GetResource(resourceURL string, cache *pokecache.Cache, action string, pokedex map[string]pokecache.Pokedex, args []string) (interface{}, error)
 }
 
 var cache *pokecache.Cache
+var pokedex map[string]pokecache.Pokedex
 
 func init() {
 	cache = pokecache.NewCache(time.Minute * 5)
+	pokedex = pokecache.NewPokedex()
 }
 
-func ProcessRequest(r FetchData, resource string, lastResponse *any, args []string) error {
-	resourceURL, err := getProperUrl(resource, *lastResponse, args)
+func ProcessRequest(r FetchData, action string, lastResponse *any, args []string) error {
+	resourceURL, err := getProperUrl(action, *lastResponse, args)
 	if err != nil {
 		return err
 	}
 
-	*lastResponse, err = r.GetResource(resourceURL, cache)
+	*lastResponse, err = r.GetResource(resourceURL, cache, action, pokedex, args)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func getProperUrl(resource string, lastResponse any, args []string) (string, error) {
+func getProperUrl(action string, lastResponse any, args []string) (string, error) {
 	if lastResponse != nil {
 		switch v := lastResponse.(type) {
 		case MapResponse:
-			if v.Resource == "locations" && resource == "map" {
+			if v.Resource == "locations" && action == "map" {
 				return v.Next, nil
-			} else if v.Resource == "locations" && resource == "mapb" {
+			} else if v.Resource == "locations" && action == "mapb" {
 				url, ok := v.Previous.(string)
 				if ok {
 					return url, nil
@@ -56,7 +63,7 @@ func getProperUrl(resource string, lastResponse any, args []string) (string, err
 		}
 	}
 
-	resourceURL, found := resources[resource]
+	resourceURL, found := resources[action]
 	if !found {
 		return "", errors.New("Requested resource was not found!")
 	}
