@@ -11,7 +11,7 @@ visit: Lists all area available to explore in that location
 explore: Lists all pokemon found in that location
 catch: Try to catch a pokemon
 inspect <pokemon name>: If you have caught that pokemon then you get informations of that pokemon
-pokedex: A list of all the pokemons that you have caught
+pokedex: A lists all caught pokemons
 help: Displays a help message
 exit: Exit the Pokedex
 `

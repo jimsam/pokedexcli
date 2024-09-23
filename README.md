@@ -6,9 +6,14 @@ A Go application, to interact with the Pokemon API at `https://pokeapi.co/` from
 If you have Go installed you can download the code and use `go run .` or build it with `go build .` and then just run the file `./pokedexcli`
 
 ### Available commands
-* help -> will display the available commands
-* map -> first 20 locations, any consecutive map command will return the next 20 results
-* mapb -> (map back) will return the previous 20 locations
+* help -> Lists the available commands.
+* map -> Lists the first 20 locations, any consecutive map command will return the next 20 results
+* mapb -> Lists the previous 20 locations, if not in first page.
+* visit -> Lists all areas available in that location.
+* explore -> Lists all pokemons found in that area. 
+* catch -> Tries to catch a pokemon.
+* inspect <pokemon name> -> If have caught that pokemon it returns details about it.
+* pokedex -> Lists all caught pokemons.
 * exit -> exits
 
 ### Next steps
